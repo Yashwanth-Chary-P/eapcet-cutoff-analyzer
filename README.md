@@ -18,12 +18,14 @@ pip install -r requirements.txt
 
 *(Optional)* For camelot fallback, install `camelot-py[cv]` and ensure Ghostscript/Java dependencies are satisfied per your OS.
 
-## Folder Structure
-- `datasets/`: Place your `TSEAMCET_2026_WEBOPTIONS.pdf` and `TGEAPCET_2025_FINALPHASE_LASTRANKS.pdf` here.
-- `output/`: Generated CSV and Excel outputs will be placed here.
-- `src/`: Contains extraction (`pdf_extract.py`), cleaning (`clean_data.py`), and merging (`merge_data.py`) modules.
-- `config.py`: Centralized configuration.
-- `main.py`: Entrypoint.
+## Input Files
+
+To run the pipeline, you must place the following input PDF files inside the `datasets/` directory (create the directory if it does not exist):
+
+- `TSEAMCET-2026+WEBOPTIONS new.pdf` (The Web Options PDF)
+- `TGEAPCET_2025_FINALPHASE_LASTRANKS.pdf` (The Last Ranks PDF)
+
+*Note: The file names must match the above exactly, or you must update the names in `config.py` to match your files.*
 
 ## Execution
 Run the following command without any user interaction:
@@ -32,14 +34,31 @@ python main.py
 ```
 
 ## Expected Outputs
-The `output/` directory will contain:
-- `web_options_raw.csv`
-- `last_ranks_raw.csv`
-- `web_options_clean.csv`
-- `last_ranks_clean.csv`
+
+After executing `main.py`, the `output/` directory will be created and populated with the following structure:
+
+### 1. Merged Datasets (`output/merged/`)
+The final combined data containing both the web options and the cutoff ranks.
 - `web_options_with_cutoffs.csv`
 - `web_options_with_cutoffs.xlsx`
-- `unmatched_records.csv`
+
+### 2. Category Cutoffs (`output/category_cutoffs/`)
+Isolated datasets for specific reservation categories (e.g., BC_B_GIRLS).
+- `<CATEGORY_NAME>.csv`
+- `<CATEGORY_NAME>.xlsx`
+
+### 3. PDF Reports (`output/pdf/`)
+Professionally formatted PDF reports generated from the processed data.
+- `ALL_CATEGORIES.pdf`: Complete cutoff dataset report.
+- `BC_B_GIRLS.pdf`: Category-specific report.
+- `KEY_STATISTICS.pdf`: Key statistical metrics and phase comparison report.
+
+### 4. Intermediate & Diagnostic Files (`output/`)
+Files used for tracking unmatched records, verifying data integrity, and reviewing raw/cleaned extraction results.
+- `web_options_raw.csv` & `last_ranks_raw.csv`
+- `web_options_clean.csv` & `last_ranks_clean.csv`
+- `unmatched_records.csv`: Records from Web Options that did not find a match in the Last Ranks data.
+- `verification_report.txt`: Summary of matches and data discrepancies.
 
 The console will also output a detailed Validation Summary containing metrics of the merge process.
 
